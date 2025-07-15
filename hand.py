@@ -12,6 +12,7 @@ class Hand():
     self.is_real = is_real
     self.is_split = is_split
     self.is_dealer = is_dealer
+    self.is_natural_blackjack = False
     
   def split_hand(self):
     return ([self.cards[0]], [self.cards[1]])
@@ -63,7 +64,7 @@ class Hand():
       # You can only decide to split once
       # You can only decide to split pairs
       # You can not split if you can not match the original bet on the new hand
-      if (decision == 'SPLIT' and (self.is_split or with_insufficient_amount or self.cards[0] != self.cards[1])):
+      if (decision == 'SPLIT' and (self.is_split or with_insufficient_amount or not self.cards[0].rank == self.cards[1].rank)):
         continue;
       # You can only double down if you can double your initial bet
       elif decision == 'DOUBLE_DOWN' and with_insufficient_amount:
@@ -80,7 +81,7 @@ class Hand():
         continue
       decision_instructions.append(f'{decision_value} to {decision_key.capitalize()}')
       
-    return f'Press {', '.join(decision_instructions)}: '
+    return f'Press {', '.join(decision_instructions)} on hand {str(self)}: '
   
   def from_value_to_key(self, value):
     for decision_key, decision_value in PLAYER_DECISION.items():
@@ -93,11 +94,8 @@ class Hand():
     available_decisions = self.get_available_decisions(remaining_amount)
     
     while not user_decision in available_decisions:
-      print(f'Your turn to decide for hand {str(self)}')
-      # User
       user_decision = input(self.get_decision_prompt(decisions=available_decisions))
       user_decision = self.from_value_to_key(user_decision)
-      
     return user_decision
       
   def get_decision(self, remaining_amount, player_name):
@@ -114,11 +112,16 @@ class Hand():
       decision = choice(available_decisions)
       
     if not decision == None:
-      print(f'{player_name} decided to {decision.lower()} on hand {str(self)}')
+      if not self.is_real:
+        print(f'{player_name} decided to {decision} on hand {str(self)}')
       self.decisions.append(decision)
     
     return decision
+
+  def check_if_natural_blackjack(self):
+    self.is_natural_blackjack = self.score == 21 and len(self.cards) == 2
     
   def __str__(self):
+    if len(self.cards) == 0:
+      return ''
     return f'{','.join(map(lambda x: str(x), self.cards))} ({self.score})'
-      

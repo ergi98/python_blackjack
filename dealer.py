@@ -4,22 +4,19 @@ from hand import Hand
 class Dealer():
   def __init__(self):
     self.deck = Deck() 
-    self.hands = []
+    self.hand = Hand(is_real=False, is_dealer=True, is_split=False)
  
   def deal_card(self):
     return self.deck.draw_top_card()
   
-  def add_to_hand(self, cards, hand):
-    # Maximum number of hands is 2
-    if hand > 1:
-      raise Exception("Hand index greater than max number of hands allowed (2)")
-    try:
-      # In case the hand is already defined in that index push new card
-       self.hands[hand].add_to_hand(cards)
-    except IndexError:
-      # If we get thrown an index error, create the hand and then assign card
-      self.hands.append(Hand(is_real=False, is_dealer=True, is_split=False))
-      self.hands[hand].add_to_hand(cards)
+  def add_to_hand(self, cards):
+    self.hand.add_to_hand(cards)
     
-    print(f'Dealer: {' | '.join(map(lambda x: str(x), self.hands))}')
+  def complete_hand(self):
+    while self.hand.score < 17:
+      card = self.deal_card()
+      self.add_to_hand(cards=[card])
     
+  def setup_for_round_start(self):
+    self.deck = Deck()
+    self.hand = Hand(is_real=False, is_dealer=True, is_split=False)

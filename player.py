@@ -20,8 +20,6 @@ class Player():
     # In case the hand is already defined in that index push new card
     self.hands[hand].add_to_hand(cards)
     
-    print(f'{self.name}: {' | '.join(map(lambda x: str(x), self.hands))}')
-    
   def place_bet_on_hand(self, bet_amount):
     if not len(self.hands) == 0:
       raise Exception("Can not place bet on existing hand.")
@@ -56,8 +54,7 @@ class Player():
         hand.add_to_hand(hand_one_cards)
       else:
         hand.add_to_hand(hand_two_cards)
-      
-    
+        
   def is_bet_valid(self, bet_amount):
     try:
       bet_amount_as_int = int(bet_amount)
@@ -74,7 +71,6 @@ class Player():
     else:
       user_bet = randrange(1, self.cash_amount + 1)
     self.place_bet_on_hand(bet_amount=user_bet)
-    print(f'{self.name} bet {user_bet}$')
     
   def double_down(self, hand):
     self.hands[hand].mark_hand_as_final()
@@ -104,3 +100,10 @@ class Player():
             self.split_hand(cards=cards, hand=hand_index)
             # Exit from the while loop
             break;
+      
+  def update_cash_amount(self, amount):
+    self.cash_amount += amount
+    
+  def setup_for_round_start(self):
+    self.hands.clear()
+    self.is_done_deciding = False

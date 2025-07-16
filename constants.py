@@ -23,5 +23,5 @@ PLAYER_DECISION = {
   'HIT': 'h',
   'STAND': 's',
   'DOUBLE_DOWN': 'dd',
-  'SPLIT': 's'
+  'SPLIT': 'sp'
 }

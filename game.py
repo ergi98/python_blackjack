@@ -139,4 +139,3 @@ class Game():
     
   def remove_bankrupt_players(self):
     self.players = list(filter(lambda x: x.is_real or floor(x.cash_amount) >= 1, self.players))
-    print(self.players)

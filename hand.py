@@ -57,7 +57,7 @@ class Hand():
     except IndexError:
       pass
     # If hand is final or the last decision was double_down we can no longer make any decisions on the hand
-    if self.is_final or last_decision == PLAYER_DECISION['DOUBLE_DOWN']:
+    if self.is_final or last_decision == 'DOUBLE_DOWN':
       return available_decisions
     
     for decision in PLAYER_DECISION:
@@ -92,6 +92,10 @@ class Hand():
   def prompt_for_decision(self, remaining_amount):
     user_decision = ''
     available_decisions = self.get_available_decisions(remaining_amount)
+    
+    # If no decisions can be made for current hand
+    if len(available_decisions) == 0:
+      self.mark_hand_as_final()
     
     while not user_decision in available_decisions:
       user_decision = input(self.get_decision_prompt(decisions=available_decisions))

@@ -1,6 +1,7 @@
 from hand import Hand
 
 from random import randrange
+from math import floor
 
 class Player():
   def __init__(self, name, is_real=False):
@@ -69,10 +70,10 @@ class Player():
         user_bet = input(f'Place your bet between 1$ and {self.cash_amount}$: ')
       user_bet = int(user_bet)
     else:
-      user_bet = randrange(1, self.cash_amount + 1)
+      user_bet = randrange(1, floor(self.cash_amount) + 1)
     self.place_bet_on_hand(bet_amount=user_bet)
     
-  def double_down(self, hand):
+  def mark_hand_as_final(self, hand):
     self.hands[hand].mark_hand_as_final()
     
   def with_open_hands(self):
@@ -95,6 +96,8 @@ class Player():
             card = dealer.deal_card()
             self.add_to_hand(cards=[card], hand=hand_index)
             self.double_bet_on_hand(hand=hand_index)
+            self.mark_hand_as_final(hand=hand_index)
+            
           elif decision == 'SPLIT':
             cards = [dealer.deal_card(), dealer.deal_card()]
             self.split_hand(cards=cards, hand=hand_index)

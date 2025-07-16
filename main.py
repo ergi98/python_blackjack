@@ -47,6 +47,8 @@ def main():
       print(f'Dealer hand: {str(blackjack_game.dealer.hand)}')
       blackjack_game.decide_winners_and_losers()
       
+      
+    blackjack_game.remove_bankrupt_players()
     blackjack_game.setup_players_for_round_start()
     blackjack_game.setup_dealer_for_round_start()
   

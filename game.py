@@ -2,6 +2,7 @@ from dealer import Dealer
 from player import Player
 from constants import MIN_PLAYER_COUNT, MAX_PLAYER_COUNT, PLAYER_NAMES
 from colorama import Fore, Style
+from math import floor
 
 class Game():
   def __init__(self):
@@ -129,9 +130,13 @@ class Game():
       
   def is_real_player_bankrupt(self):
     for player in self.players:
-      if player.is_real and player.cash_amount > 0:
+      if player.is_real and floor(player.cash_amount) >= 1:
         return False
     return True
   
   def setup_dealer_for_round_start(self):
     self.dealer.setup_for_round_start()
+    
+  def remove_bankrupt_players(self):
+    self.players = list(filter(lambda x: x.is_real or floor(x.cash_amount) >= 1, self.players))
+    print(self.players)

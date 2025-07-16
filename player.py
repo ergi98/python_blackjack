@@ -35,26 +35,22 @@ class Player():
     self.hands[hand].double_bet()
     
   def split_hand(self, cards, hand):
-    hand_one_cards, hand_two_cards = self.hands[hand].split_hand()
+    new_hands = self.hands[hand].split_hand()
     current_bet = self.hands[hand].bet_amount
-    hand_one_cards.append(cards[0])
-    hand_two_cards.append(cards[1])
     # Remove old hand
     self.hands.clear()
-    # Add the split hands
-    self.hands.append(Hand(is_real=self.is_real, is_dealer=False, is_split=True))
-    self.hands.append(Hand(is_real=self.is_real, is_dealer=False, is_split=True))
-    # You are required to match the bet of the beginning hand
+    # Splitting current hand in two new hands
+    for i in range (0, 2):
+      temp_hand = Hand(is_real=self.is_real, is_dealer=False, is_split=True)
+      # Add card to new hand
+      new_hands[i].append(cards[i])
+      # Add a new card to complete the hand
+      temp_hand.add_to_hand(new_hands[i])
+      # Match the bet on both hands
+      temp_hand.bet(current_bet)
+      self.hands.append(temp_hand)
     # Remove from cash pool
-    # Subtracting only once since we already subtracted when placing initial bet
     self.cash_amount -= current_bet
-    # Bet on both hands the same amount and add cards
-    for hand, hand_index in enumerate(self.hands):
-      hand.bet(current_bet)
-      if hand_index == 0:
-        hand.add_to_hand(hand_one_cards)
-      else:
-        hand.add_to_hand(hand_two_cards)
         
   def is_bet_valid(self, bet_amount):
     try:
